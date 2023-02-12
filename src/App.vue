@@ -1,32 +1,9 @@
-<script lang="ts">
-import PokeCard from "./components/PokeData/PokeCard.vue";
-import Search from "./components/Search/Search.vue";
-
-export default {
-  components: {
-    PokeCard,
-    Search,
-  },
-  data() {
-    return {
-      hasData: false,
-    };
-  },
-  methods: {
-    toggleData() {
-      this.hasData = !this.hasData;
-    },
-  },
-};
+<script setup lang="ts">
+import Home from "./pages/Home.vue";
+import Pokemon from "./pages/Pokemon.vue";
 </script>
 
 <template>
-  <h1>Pokédex Search</h1>
-  <Search />
-  <button @click="toggleData">Toggle</button>
-  <PokeCard v-if="hasData" />
+  <Home />
+  <Pokemon />
 </template>
-
-<style lang="scss">
-@import "./style.scss";
-</style>
