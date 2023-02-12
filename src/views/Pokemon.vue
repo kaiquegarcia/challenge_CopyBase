@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import Header from "../components/Layout/Header.vue";
-import Footer from "../components/Layout/Footer.vue";
 </script>
 
 <template>
-  <Header />
   <div class="poke-info">
-    img
-    <h1>Name</h1>
-    type habitat hp atk spatk spd def spdef etc
+    <div>img</div>
+    <div>
+      <h1>Name</h1>
+      #id type habitat
+    </div>
+    <div>hp atk spatk spd def spdef etc</div>
+    <div>evolves to:</div>
   </div>
-  <Footer />
 </template>
 
 <style scoped lang="scss">

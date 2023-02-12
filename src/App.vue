@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import Home from "./pages/Home.vue";
-import Pokemon from "./pages/Pokemon.vue";
+import Header from "./components/Layout/Header.vue";
+import Footer from "./components/Layout/Footer.vue";
 </script>
 
 <template>
-  <Home />
-  <Pokemon />
+  <Header />
+  <router-view />
+  <Footer />
 </template>

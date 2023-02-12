@@ -5,10 +5,13 @@ const pokemon = withDefaults(defineProps<IPokemon>(), {});
 </script>
 
 <template>
-  <div>
+  <div style="width: 100%">
     <div class="card">
       <img :src="pokemon.imgUrl" :alt="pokemon.imgAlt" />
       <p>{{ pokemon.name }}</p>
+    </div>
+    <div v-if="pokemon.evolutions?.length ?? 0 > 0">
+      <span class="arrow">&#8595;</span>
     </div>
     <div v-if="pokemon.evolutions?.length ?? 0 > 0" class="evolution-list">
       <PokeCard
@@ -35,6 +38,10 @@ const pokemon = withDefaults(defineProps<IPokemon>(), {});
 
 .evolution-list {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
+}
+
+.arrow {
+  font-size: 2rem;
 }
 </style>
