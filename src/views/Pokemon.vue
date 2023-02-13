@@ -7,6 +7,14 @@ export default {
       pokemon: mock,
     };
   },
+  computed: {
+    firstStatCol() {
+      return this.pokemon.stats.slice(0, 3);
+    },
+    secondStatCol() {
+      return this.pokemon.stats.slice(3, 6);
+    },
+  },
 };
 </script>
 
@@ -17,13 +25,16 @@ export default {
       <p style="margin: 2px">#{{ pokemon.id }}</p>
       <h2 style="margin: 2px">{{ pokemon.name }}</h2>
       <div style="display: flex; justify-content: center">
-        <p v-for="(type, index) in pokemon.types">
-          {{ type.type.name }}
-        </p>
+        <p v-for="(type, index) in pokemon.types">Type: {{ type.type.name }}</p>
       </div>
-      <div>
+      <div style="display: flex; justify-content: space-evenly">
         <div>
-          <p v-for="(stat, index) in pokemon.stats" style="margin: 4px">
+          <p v-for="stat in firstStatCol" style="margin: 4px">
+            {{ stat.stat.name }}: {{ stat.base_stat }}
+          </p>
+        </div>
+        <div>
+          <p v-for="stat in secondStatCol" style="margin: 4px">
             {{ stat.stat.name }}: {{ stat.base_stat }}
           </p>
         </div>
