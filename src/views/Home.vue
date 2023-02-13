@@ -1,6 +1,7 @@
 <script lang="ts">
 import PokeCard from "../components/PokeData/PokeCard.vue";
 import Search from "../components/Search/Search.vue";
+import { mock } from "../utils/pokemonMock";
 
 export default {
   components: {
@@ -9,45 +10,13 @@ export default {
   },
   data() {
     return {
-      hasData: false,
-      pokemon: {
-        name: "Ditto",
-        imgUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
-        imgAlt: "ditto sprite",
-        evolutions: [
-          {
-            name: "Ditto",
-            imgUrl:
-              "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
-            imgAlt: "ditto sprite",
-            evolutions: [
-              {
-                name: "Ditto",
-                imgUrl:
-                  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
-                imgAlt: "ditto sprite",
-              },
-              {
-                name: "Ditto",
-                imgUrl:
-                  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
-                imgAlt: "ditto sprite",
-              },
-            ],
-          },
-          {
-            name: "Ditto",
-            imgUrl:
-              "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
-            imgAlt: "ditto sprite",
-          },
-        ],
-      },
+      showData: false,
+      pokemon: mock,
     };
   },
   methods: {
     toggleData() {
-      this.hasData = !this.hasData;
+      this.showData = !this.showData;
     },
   },
 };
@@ -56,13 +25,15 @@ export default {
 <template>
   <div style="display: flex; flex-direction: column; align-items: center">
     <Search />
-    <button @click="toggleData">Toggle</button>
+    <button @click="toggleData">Toggle View</button>
   </div>
-  <div v-if="hasData">
+  <div v-if="showData">
     <PokeCard
+      :id="pokemon.id"
       :name="pokemon.name"
-      :img-url="pokemon.imgUrl"
-      :img-alt="pokemon.imgAlt"
+      :sprites="pokemon.sprites"
+      :stats="pokemon.stats"
+      :types="pokemon.types"
       :evolutions="pokemon.evolutions" />
   </div>
 </template>

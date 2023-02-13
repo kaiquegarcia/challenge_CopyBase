@@ -1,16 +1,29 @@
-<script setup lang="ts"></script>
+<script lang="ts">
+export default {
+  data() {
+    return {
+      text: "",
+    };
+  },
+  methods: {
+    handleChange(e: any) {
+      this.$emit("customChange", e.target.value);
+    },
+  },
+};
+</script>
 
 <template>
   <div>
-    <p>Search Pokémon by their index</p>
-    <p>There are up to 1008 known species</p>
-    <input class="input" type="number" placeholder="Pokémon ID" max="1008" min="0" />
+    <p>Search Pokémon by name or index</p>
+    <input class="input" type="text" placeholder="Pokémon" v-model="text" @input="handleChange" />
   </div>
 </template>
 
 <style scoped lang="scss">
 .input {
-  width: 90px;
+  font-size: 24px;
+  width: 180px;
   height: 24px;
 }
 </style>

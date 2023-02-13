@@ -1,15 +1,34 @@
-<script setup lang="ts">
+<script lang="ts">
+import { mock } from "../utils/pokemonMock";
+
+export default {
+  data() {
+    return {
+      pokemon: mock,
+    };
+  },
+};
 </script>
 
 <template>
   <div class="poke-info">
-    <div>img</div>
+    <div><img :src="pokemon.sprites.front_default" alt="poke.sprite" style="height: 10rem" /></div>
     <div>
-      <h1>Name</h1>
-      #id type habitat
+      <p style="margin: 2px">#{{ pokemon.id }}</p>
+      <h2 style="margin: 2px">{{ pokemon.name }}</h2>
+      <div style="display: flex; justify-content: center">
+        <p v-for="(type, index) in pokemon.types">
+          {{ type.type.name }}
+        </p>
+      </div>
+      <div>
+        <div>
+          <p v-for="(stat, index) in pokemon.stats" style="margin: 4px">
+            {{ stat.stat.name }}: {{ stat.base_stat }}
+          </p>
+        </div>
+      </div>
     </div>
-    <div>hp atk spatk spd def spdef etc</div>
-    <div>evolves to:</div>
   </div>
 </template>
 
@@ -22,5 +41,6 @@
   width: 500px;
   height: fit-content;
   margin: 16px auto;
+  padding: 8px;
 }
 </style>
