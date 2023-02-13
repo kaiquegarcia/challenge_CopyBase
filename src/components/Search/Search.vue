@@ -1,22 +1,24 @@
 <script lang="ts">
 export default {
-  data() {
-    return {
-      text: "",
-    };
-  },
+  props: ['value'],
+  emits: ['update:value'],
   methods: {
-    handleChange(e: any) {
-      this.$emit("customChange", e.target.value);
-    },
-  },
+    onChange($event) {
+      this.$emit('update:value', $event.target.value);
+    }
+  }
 };
 </script>
 
 <template>
   <div>
     <p>Search Pokémon by name or index</p>
-    <input class="input" type="text" placeholder="Pokémon" v-model="text" @input="handleChange" />
+    <input 
+      class="input"
+      type="text"
+      placeholder="Pokémon"
+      :value="value"
+      @input="onChange" />
   </div>
 </template>
 

@@ -8,7 +8,7 @@ const pokemon = withDefaults(defineProps<IPokemon>(), {});
   <div style="width: 100%">
     <router-link :to="`/pokemon/${pokemon.name}`">
       <div class="card">
-        <img :src="pokemon.sprites.front_default" alt="poke-sprite" />
+        <img :src="pokemon.imgUrl" alt="poke-sprite" />
         <p>#{{ pokemon.id }}</p>
         <p>{{ pokemon.name }}</p>
       </div>
@@ -21,7 +21,7 @@ const pokemon = withDefaults(defineProps<IPokemon>(), {});
         v-for="(evolution, index) in pokemon.evolutions"
         :id="evolution.id"
         :name="evolution.name"
-        :sprites="evolution.sprites"
+        :imgUrl="evolution.imgUrl"
         :stats="evolution.stats"
         :types="evolution.types"
         :evolutions="evolution.evolutions" />

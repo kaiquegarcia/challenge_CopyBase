@@ -1,18 +1,17 @@
 <script lang="ts">
-import { mock } from "../utils/pokemonMock";
 
 export default {
   data() {
     return {
-      pokemon: mock,
+      pokemon: null,
     };
   },
   computed: {
     firstStatCol() {
-      return this.pokemon.stats.slice(0, 3);
+      return this.pokemon?.stats.slice(0, 3);
     },
     secondStatCol() {
-      return this.pokemon.stats.slice(3, 6);
+      return this.pokemon?.stats.slice(3, 6);
     },
   },
 };

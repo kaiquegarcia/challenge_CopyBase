@@ -1,7 +1,7 @@
 <script lang="ts">
 import PokeCard from "../components/PokeData/PokeCard.vue";
 import Search from "../components/Search/Search.vue";
-import { mock } from "../utils/pokemonMock";
+import { getPokemonByNameOrId } from "../services/api";
 
 export default {
   components: {
@@ -10,28 +10,36 @@ export default {
   },
   data() {
     return {
-      showData: false,
-      pokemon: mock,
+      value: "",
+      pokemon: null
     };
   },
   methods: {
-    toggleData() {
-      this.showData = !this.showData;
-    },
+    search() {
+      getPokemonByNameOrId(this.value).then(
+        (pokemon) => {
+          this.pokemon = pokemon;
+        },
+        (err) => {
+          this.pokemon = null;
+          alert(err);
+        }
+      )
+    }
   },
 };
 </script>
 
 <template>
   <div style="display: flex; flex-direction: column; align-items: center">
-    <Search />
-    <button @click="toggleData">Toggle View</button>
+    <Search @update:value="newValue => value = newValue" />
+    <button @click="search">Search</button>
   </div>
-  <div v-if="showData">
+  <div v-if="pokemon">
     <PokeCard
       :id="pokemon.id"
+      :imgUrl="pokemon.imgUrl"
       :name="pokemon.name"
-      :sprites="pokemon.sprites"
       :stats="pokemon.stats"
       :types="pokemon.types"
       :evolutions="pokemon.evolutions" />

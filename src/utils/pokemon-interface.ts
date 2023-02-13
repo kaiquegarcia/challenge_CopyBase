@@ -1,19 +1,13 @@
+export interface IPokemonStat {
+  name: string;
+  value: number;
+};
+
 export interface IPokemon {
   id: number;
   name: string;
-  sprites: {
-    front_default: string;
-  };
-  stats: {
-    base_stat: number;
-    stat: {
-      name: string;
-    };
-  }[];
-  types: {
-    type: {
-      name: string;
-    };
-  }[];
+  imgUrl: string;
+  stats: IPokemonStat[];
+  types: string[];
   evolutions?: IPokemon[];
-}
+};
