@@ -2,20 +2,21 @@ import axios from "axios";
 import { APIEvolutionChain, APIEvolutionChainItem, APIPokemon, APIPokemonStat, APIPokemonType } from "../utils/api-responses-interface";
 import { IPokemon, IPokemonStat } from "../utils/pokemon-interface";
 
+const baseURL = "https://pokeapi.co/api/v2";
 const api = axios.create({
-  baseURL: "https://pokeapi.co/api/v2",
+  baseURL,
 });
 
-const parsePokemonStats = (statsFromAPI: APIPokemonStat[]): IPokemonStat[] => statsFromAPI.filter((statsFromAPI: any): IPokemonStat => {
+const parsePokemonStats = (statsFromAPI: APIPokemonStat[]): IPokemonStat[] => statsFromAPI.map((statsFromAPI: any): IPokemonStat => {
     return {
         name: statsFromAPI.stat.name,
         value: statsFromAPI.base_stat,
     };
-}) as any[];
+});
 
-const parsePokemonTypes = (typesFromAPI: APIPokemonType[]): string[] => typesFromAPI.filter((typeFromAPI: any) => {
+const parsePokemonTypes = (typesFromAPI: APIPokemonType[]): string[] => typesFromAPI.map((typeFromAPI: any) => {
     return typeFromAPI.type.name;
-}) as any[];
+});
 
 export const getPokemonByNameOrId = function(nameOrId: number | string, getEvolutions: boolean = true): Promise<IPokemon> {
     return new Promise((resolve, reject) => {
@@ -84,30 +85,67 @@ const decodeEvolution = function(item: APIEvolutionChainItem): Promise<IPokemon>
         );
     });
 }
+
+const getEvolutionListOf = function(pokemon: IPokemon, evolvesTo: APIEvolutionChainItem[] | undefined): APIEvolutionChainItem[] | undefined {
+    if (!evolvesTo) {
+        return [];
+    }
+
+    for(let index in evolvesTo) {
+        let ev = evolvesTo[index];
+        if (ev.species.name === pokemon.name) {
+            return ev.evolves_to;
+        }
+
+        let innerList = getEvolutionListOf(pokemon, ev.evolves_to);
+        if (innerList) {
+            return innerList;
+        }
+    }
+
+    return [];
+}
   
 const getEvolutionsOf = function(pokemon: IPokemon): Promise<IPokemon[]> {
     return new Promise((resolve, reject) => {
-        console.log(pokemon);
-        api.get(`/evolution-chain/${pokemon.id}`).then(
+        api.get(`/pokemon-species/${pokemon.id}`).then(
             (response) => {
                 if (response.status !== 200) {
-                    reject('could not find evolution chain');
+                    reject('could not find pokemon specie');
                     return;
                 }
 
-                const data: APIEvolutionChain = response.data;
-                let evolutionPromises: Promise<IPokemon>[] = [];
+                const evolutionChainUrl = response.data.evolution_chain.url.replace(baseURL, "");
+                api.get(evolutionChainUrl).then(
+                    (response) => {
+                        if (response.status !== 200) {
+                            reject('could not find evolution chain');
+                            return;
+                        }
+        
+                        const data: APIEvolutionChain = response.data;
+                        let evolutionPromises: Promise<IPokemon>[] = [];
+                        let evolvesTo: APIEvolutionChainItem[] | undefined = [];
 
-                if (data.chain?.evolves_to?.length) {
-                    data.chain.evolves_to.forEach((ev) => {
-                        evolutionPromises.push(decodeEvolution(ev));
-                    })
-                }
-
-                Promise.all(evolutionPromises).then(resolve, reject)
+                        if (data.chain.species.name === pokemon.name) {
+                            evolvesTo = data.chain.evolves_to;
+                        } else {
+                            evolvesTo = getEvolutionListOf(pokemon, data.chain?.evolves_to);
+                        }
+        
+                        if (evolvesTo && evolvesTo.length) {
+                            evolvesTo.forEach((ev) => {
+                                evolutionPromises.push(decodeEvolution(ev));
+                            })
+                        }
+        
+                        Promise.all(evolutionPromises).then(resolve, reject)
+                    },
+                    reject
+                );
             },
             reject
-        )
+        );
     });
 };
   

@@ -1,6 +1,19 @@
 <script lang="ts">
+import { getPokemonByNameOrId } from "../services/api";
 
 export default {
+  beforeMount() {
+    let pokemonName = this.$route.params.id;
+    getPokemonByNameOrId(pokemonName).then(
+      (pokemon) => {
+        this.pokemon = pokemon;
+      },
+      (err) => {
+        alert(err);
+        location.href = '/';
+      }
+    );
+  },
   data() {
     return {
       pokemon: null,
@@ -19,23 +32,28 @@ export default {
 
 <template>
   <div class="poke-info">
-    <div><img :src="pokemon.sprites.front_default" alt="poke.sprite" style="height: 10rem" /></div>
-    <div>
-      <p style="margin: 2px">#{{ pokemon.id }}</p>
-      <h2 style="margin: 2px">{{ pokemon.name }}</h2>
-      <div style="display: flex; justify-content: center">
-        <p v-for="(type, index) in pokemon.types">Type: {{ type.type.name }}</p>
-      </div>
-      <div style="display: flex; justify-content: space-evenly">
-        <div>
-          <p v-for="stat in firstStatCol" style="margin: 4px">
-            {{ stat.stat.name }}: {{ stat.base_stat }}
-          </p>
+    <div v-if="!pokemon">
+      Loading...
+    </div>
+    <div v-else>
+      <div><img :src="pokemon.imgUrl" alt="poke.sprite" style="height: 10rem" /></div>
+      <div>
+        <p style="margin: 2px">#{{ pokemon.id }}</p>
+        <h2 style="margin: 2px">{{ pokemon.name }}</h2>
+        <div style="display: flex; justify-content: center">
+          <p v-for="(typeName, index) in pokemon.types">Type: {{ typeName }}</p>
         </div>
-        <div>
-          <p v-for="stat in secondStatCol" style="margin: 4px">
-            {{ stat.stat.name }}: {{ stat.base_stat }}
-          </p>
+        <div style="display: flex; justify-content: space-evenly">
+          <div>
+            <p v-for="stat in firstStatCol" style="margin: 4px">
+              {{ stat.name }}: {{ stat.value }}
+            </p>
+          </div>
+          <div>
+            <p v-for="stat in secondStatCol" style="margin: 4px">
+              {{ stat.name }}: {{ stat.value }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
